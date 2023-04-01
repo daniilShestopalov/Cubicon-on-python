@@ -61,6 +61,7 @@ class MainFrame(QMainWindow, MainFrameUi):
         self.gameFieldTableView.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.gameFieldTableView.setFocusPolicy(Qt.NoFocus)
         self.gameFieldTableView.setSelectionMode(QAbstractItemView.NoSelection)
+        self.resizeEvent = self.onResize
 
     def new_game(self):
         self._game.new_game(self.level, self.player)
@@ -133,13 +134,39 @@ class MainFrame(QMainWindow, MainFrameUi):
                                                         " а от игрока требуеться собрать каждую группу в одну линию. ")
         self.msg.exec()
 
+    def onResize(self, event):
+        self.verticalLayout.minimumSize().setHeight(self.height())
+        self.verticalLayout.minimumSize().setWidth(self.width())
+        self.horizontalLayout.minimumSize().setHeight(self.height())
+        self.horizontalLayout.minimumSize().setWidth(self.width())
+        self.gameFieldTableView.setMinimumHeight(self.height())
+        self.gameFieldTableView.setMinimumWidth(self.width())
+        super().resizeEvent(event)
+
+
     '''def resizeEvent(self, event):
         width = self.size().width()
         height = self.size().height()
 
-        koefW = width / self.w
-        koefH = height / self.h
+        koefW = width / self.width()
+        koefH = height / self.height()
 
-        self.verticalLayout.setGeometry(20, 20,100,100)
-        self.horizontalLayout.setGeometry(20, 20,100,100)
-        self.gameFieldTableView.setGeometry(20, 20,100,100)'''
+        xV = self.verticalLayout.geometry().x()
+        xH = self.horizontalLayout.geometry().x()
+        xG = self.gameFieldTableView.geometry().x()
+
+        yV = self.verticalLayout.geometry().y()
+        yH = self.horizontalLayout.geometry().y()
+        yG = self.gameFieldTableView.geometry().y()
+
+        hV = self.verticalLayout.geometry().height()
+        hH = self.horizontalLayout.geometry().height()
+        hG = self.gameFieldTableView.geometry().height()
+
+        wV = self.verticalLayout.geometry().width()
+        wH = self.horizontalLayout.geometry().width()
+        wG = self.gameFieldTableView.geometry().width()
+
+        self.verticalLayout.setContentsMargins(0, 0, int(wV * koefW), int(hV * koefH))
+        self.horizontalLayout.setContentsMargins(0, 0, int(wH * koefW), int(hH * koefH))
+        self.gameFieldTableView.resize(int(wG * koefW), int(hG * koefH))'''
